@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>choose_target</title>
+
+		<!-- Google CSS Font -->
+		<link href="https://fonts.googleapis.com/css?family=Kumar+One+Outline&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Yellowtail&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+	    <!-- Bootstrap core CSS -->
+    	<link href="statics/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- for carousel --> 
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	    <!-- -->
+
+
+	    <!-- for carousel -->
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+	    <link rel="stylesheet" type="text/css" href="statics/css/layout.css">
+	    <link rel="stylesheet" type="text/css" href="statics/css/delegator.css">
+	   	<link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/3fadc3202f.js" crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<div class="container detail">
+            <div class="row" id="detail_commission">
+                <div class="col-sm-6">    
+                    <div class="info">
+                        <div class="head_img">
+                            <div class="cross">
+                                <i class="fas fa-times"></i>
+                            </div>
+				            <img class="det_img" src="">
+                            <div class="detail">
+                                <p class="det_delegator">
+                                
+                                </p>
+                                <p class="rank">
+
+                                </p>
+                                <p class="exp">
+
+                                </p>
+                            </div>
+                        </div>
+                        <div class="detail_des">
+
+                        </div>
+                        <div class="sub_button">
+							
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="white">
+            
+        </div>
+        
+		<div class="container">
+            <ul>
+                <li><a href="index.html" style="color:white;">登出</a></li>
+                <li><a href="delegator_back.html" style="color:white;">委託後台</a></li>
+                <li><a href="trustee_back.html" style="color:white;">受託後台</a></li>
+                <li><a href="history.html" style="color:white;">歷史紀錄</a></li>
+                <li><a href="af_login.html" style="color:white;">委託清單</a></li>
+            </ul>
+        </div>
+
+		<div class="container stores">
+			<div id="commission_panel" class="row">
+				<div class="col-sm-4 col-div-style"></div>
+				
+            </div>
+        </div>
+		
+		<table class="table table-hover">
+		  <thead class="thead-dark">
+		    <tr>
+		      <th scope="col">受託者名稱</th>
+		      <th scope="col">E-mail</th>
+		      <th scope="col">Level</th>
+		      <th scope="col">歷程記錄</th>
+		      <th scope="col">選擇受託人</th>
+		    </tr>
+		  </thead>
+		  <tbody id = "table_content">
+		    
+		  </tbody>
+		</table>
+		
+		<script type="text/javascript">
+		
+			//登入時已經存好的
+			var id = localStorage.getItem("id");
+			
+			var url_string = window.location.href;
+	        var url = new URL(url_string);
+	        var id_commission = url.searchParams.get("id");
+	        console.log("id:" + id)
+	        
+	        
+	        function getCommission(){
+	        	$.ajax({
+                    type: "GET",
+                    url: "api/delegator_back.do",
+                    crossDomain: true,
+                    data: {
+                        "id": id,
+                        "id_commission": id_commission,
+                        "applying": id_commission
+                    },
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                    	console.log(response.status)
+                    	if(response.status == 200){
+                    		setBriefCommission(response.response.data[0]);
+                    		setDetailCommission(response.response.data[0]);
+                    		setApplying(response.applying.data)
+                        }
+                    	console.log(response)
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+	        }
+	        
+	        function setBriefCommission(data){
+	        	let inner_html = '';
+				inner_html += '<div class="col-sm-2 col-div-style">';
+				inner_html += '<div class="contents store" id="' + data.idtbCommission_list + '">';
+				inner_html += '<div class="head_img">' + '<img class="nor_img" src="statics/img/' + data.img + '">' + '</div>';
+				inner_html += '<div class="delegator">' + data.name + '</div>';
+				inner_html += '<div class="rank">';
+				inner_html += addStar(data.star_level);
+				inner_html += '</div>';
+				inner_html += '<div class="brief_des">' + data.brief_description + '</div>';
+				inner_html += '</div>';
+				inner_html += '</div>';
+				$("#commission_panel").append(inner_html);
+	        }
+	        
+	        function setDetailCommission(data){
+				$(".det_img").attr("src", "statics/img/" + data.img);
+				$(".detail .det_delegator").text("委託人:" + data.name);
+				$(".detail .rank").html( addStar(data.star_level) );
+				$(".detail .exp").text("經驗值:" + data.exp);
+				$(".detail_des").text(data.detail_description);
+	        }
+	        
+	        function setApplying(data){
+	        	$.each(data, function(index, val) {
+	        		let inner_html = '';
+	        		inner_html += "<tr>";
+	        		inner_html += '<td><span class="glyphicon glyphicon-user"></span> ' + val.name + '</td>';
+	        		inner_html += '<td><span class="glyphicon glyphicon-envelope"></span> ' + val.email + '</td>';
+	        		inner_html += '<td>' + val.level + '</td>';
+	        		inner_html += '<td class="history" id="' + val.idtbMember + '">';
+	        		inner_html += '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span> 評價</a>'
+	        		inner_html += '</td>';
+	        		inner_html += '<td class="submit" id="' + val.idtbMember + '">';
+	        		inner_html += '<a href="#" class="btn btn-success"><span class="glyphicon glyphicon-send"></span> 交付委託</a>'
+	        		inner_html += '</td>';
+	        		inner_html += "</tr>";
+	        		$("#table_content").append(inner_html);
+           		});
+	        }
+	        
+	        function addStar(star_level){
+	        	inner_html = "";
+	        	//總共要填五次
+	        	for(i=0; i<5; i++){
+	        		//判斷要填滿幾次星星
+	        		if(i < star_level){
+	        			inner_html += '<i class="fas fa-star"></i>';
+	        		}else {
+	        			inner_html += '<i class="far fa-star"></i>'
+	        		}
+	        	}
+	        	return inner_html;
+	        }
+	        
+	        function updateDB(id_commission, id_trustee){
+	        	// 將資料組成JSON格式
+                var data_object = {
+                    "id_commission": id_commission,
+                    "id_trustee": id_trustee
+                };
+
+                // 將JSON格式轉換成字串
+                var data_string = JSON.stringify(data_object);
+	        	
+	        	$.ajax({
+                    type: "PUT",
+                    url: "api/delegator_back.do",
+                    data: data_string,
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                    	console.log(response)
+                    	alert("交付委託成功!");
+	        			window.location.href = "af_login.html";
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+            	});
+	        }
+	        
+	        
+	        $(document).ready(function() {
+	        	getCommission();
+	        	//跳轉history
+	        	$("#table_content").on('click', '.history', function(event) {
+        			var id_trustee = $(event.target).parents(".history").attr("id")
+					console.log(id_trustee)
+
+        			window.location.href = "history.html" + "?id=" + id_trustee;
+	        		
+				});
+	        	
+				//詳細內容往下滑出
+				$(".stores").click(function(event) {
+					$(".container.detail").css("opacity","100%");
+				    $(".container.detail").css("top","50%");
+				    $(".container.detail").css("transform","translateY(-50%)");
+				    $(".white").css("background","rgb(255,255,255,0.8)");
+				    $(".white").css("pointer-events","auto");
+	            });
+				
+				//點XX可以關閉
+				$(".fas.fa-times").on("click",function(){
+				    $(".container.detail").css("opacity","0%");
+				    $(".container.detail").css("top","-100%");
+				    $(".white").css("background","none");
+				    $(".white").css("pointer-events","none");
+				});
+	        	
+	        	//選擇受託人
+	        	$("#table_content").on('click', '.submit', function(event) {
+	        		var r = confirm("確定交付委託?");
+	        		if(r){
+	        			var id_trustee = $(event.target).parents(".submit").attr("id")
+						console.log(id_trustee)
+	        			console.log(id_commission)
+						//id_commission一開始就從URL拿到了
+	        			updateDB(id_commission, id_trustee);
+	        		}
+				});
+	        	
+	        	
+	        	
+	        	
+
+            });
+	    </script>
+	    
+		<script src="statics/jquery/jquery.min.js"></script>
+		<script src="statics/bootstrap/js/bootstrap.bundle.min.js"></script>
+		
+	</body>
+</html>

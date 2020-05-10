@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<title>CommissionList</title>
+
+	<!-- Google CSS Font -->
+	<link href="https://fonts.googleapis.com/css?family=Kumar+One+Outline&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Yellowtail&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+   	<link href="statics/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- for carousel --> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <!-- -->
+
+
+    <!-- for carousel -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="statics/css/guild.css">
+
+</head>
+<body>
+    <div class="container">
+       <ul>
+           <li><a href="index.html" style="color:white;">登出</a></li>
+           <li><a href="delegator_back.html" style="color:white;">委託後台</a></li>
+           <li><a href="trustee_back.html" style="color:white;">受託後台</a></li>
+           <li><a href="history.html" style="color:white;">歷史紀錄</a></li>
+           <li><a href="af_login.html" style="color:white;">委託清單</a></li>
+       </ul>
+    </div>
+    
+	<div class="container" style="padding-top: 5vh;">
+	</div>
+	
+	<table class="table store-hover">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th class="store_border-radius_left" scope="col">申請人</th>
+	      <th scope="col">簡述</th>
+	      <th scope="col">詳述</th>
+	      <th scope="col">委託星等</th>
+	      <th scope="col">委託經驗設置</th>
+	      <th class="store_border-radius_right" scope="col">審核委託</th>
+	    </tr>
+	  </thead>
+	  <tbody id = "table_content">
+	    
+	  </tbody>
+	</table>
+
+</body>
+<script type="text/javascript">
+    var sql_num = 0;
+    //post用的資料
+    var id_delegator_person;
+    var brief_description;
+    var detail_description;
+    var star_level;
+    var tbDelegator_back_idtbDelegator_back;
+    var exp;
+    
+	function getAllData(){
+    	
+    	$.ajax({
+            type: "GET",
+            url: "api/guild.do",
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if(response.status == 200){            	
+                    updateTable(response.response.data);
+                }
+                console.log(response);
+            },
+            error: function () {
+                alert("無法連線到伺服器！");
+            }
+        })
+    }
+	
+	function updateTable(data){
+		$("#table_content").empty();
+    	$.each(data, function(index, val) {
+    		let inner_html = '';
+    		inner_html += '<tr class="store">';
+    		inner_html += '<td class="id_delegator_person store_border-radius_left white"><span class="glyphicon glyphicon-user white"></span><font face="papyrus">' + val.id_delegator_person + '</font></td>';
+    		inner_html += '<td class="brief_description white"> <font face="papyrus">' + val.brief_description + '</font></td>';
+    		inner_html += '<td class="detail_description white"> <font face="papyrus">' + val.detail_description + '</font></td>';
+    		inner_html += '<td class="star_level white"><font face="papyrus">' + val.star_level + '</font></td>';
+    		inner_html += '<td class="exp">' + "<input type='text', name='exp'></input>" + '</td>';
+    		inner_html += '<td class="submit store_border-radius_right" id="' + val.tbDelegator_back_idtbDelegator_back + '">';
+    		inner_html += '<a href="#" class="btn btn-success mh7">審核通過</a>'
+    		inner_html += '</td>';
+    		inner_html += '</tr>';
+    		$("#table_content").append(inner_html);
+   		});
+    }
+	// "glyphicon-send" will be misplaced if "mh7" is used
+	
+    function approve(id_delegator_person, brief_description, detail_description, star_level, exp, tbDelegator_back_idtbDelegator_back) {
+       	var data_object = {
+                   "id_delegator_person": id_delegator_person,
+                   "brief_description": brief_description,
+                   "detail_description": detail_description,
+                   "star_level": star_level,
+                   "tbDelegator_back_idtbDelegator_back": tbDelegator_back_idtbDelegator_back,
+                   "exp": exp
+               };
+
+           // 將JSON格式轉換成字串
+        var data_string = JSON.stringify(data_object);
+       	console.log(data_object)
+
+        $.ajax({
+            type: "POST",
+            url: "api/guild.do",
+            crossDomain: true,
+            data: data_string,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if(response.status == 200){
+                	alert("審核委託成功");
+                	getAllData();
+                }
+                console.log(response);
+            },
+            error: function () {
+                alert("無法連線到伺服器！");
+                
+            }
+        });
+        	
+        
+    }
+
+    $(document).ready(function() {
+        getAllData();
+        
+        $("#table_content").on('click', '.submit', function(event) {
+    		var r = confirm("審核通過?");
+    		if(r){
+    			//trim()會清除前後的空格
+    			var exp = $(event.target).parents(".submit").siblings(".exp").children("input").val().trim();
+    			//判斷是否為正整數
+    			if((/(^[0-9]*[1-9][0-9]*$)/.test(exp))){
+    				var id_delegator_person = $(event.target).parents(".submit").siblings(".id_delegator_person").text();
+        			var brief_description = $(event.target).parents(".submit").siblings(".brief_description").text();
+        			var detail_description = $(event.target).parents(".submit").siblings(".detail_description").text();
+        			var star_level = $(event.target).parents(".submit").siblings(".star_level").text();
+        			var tbDelegator_back_idtbDelegator_back = $(event.target).parents(".submit").attr("id");
+
+    				console.log(id_delegator_person);
+    				console.log(brief_description);
+    				console.log(detail_description);
+    				console.log(star_level);
+    				console.log(exp);
+    				console.log(tbDelegator_back_idtbDelegator_back);
+    				approve(id_delegator_person, brief_description, detail_description, star_level, exp, tbDelegator_back_idtbDelegator_back);
+    			}else {
+    				console.log(exp);
+    			}
+
+    		}
+		});
+    });
+
+</script>
+            
+            
+<script src="statics/jquery/jquery.min.js"></script>
+<script src="statics/bootstrap/js/bootstrap.bundle.min.js"></script>
+</html>

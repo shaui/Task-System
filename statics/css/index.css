@@ -1,0 +1,147 @@
+
+body{
+    margin: 0px;
+    padding: 0px;
+    background: url("../img/%E4%B8%AD%E5%A4%AE.jpg");
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 1;
+}
+.banner {
+    display: block;
+    height: 120px;
+	width: 100vw;
+}
+.login{
+    width: 400px;
+    background: rgb(0,0,0,0.45);
+    height: 450px;
+    padding: 40px 40px;
+    border-radius: 10px;
+    position: absolute;
+    left: 20%;
+    top: 0%;
+    z-index: 5;
+    border:5px rgb(255,255,255,0.6) solid; 
+    opacity: 100%;
+    transition: 1.5s;
+}
+form h1{
+    text-align: center;
+    font-family: cursive;
+    font-size: 60px;
+    color: white;
+}
+.txtb{
+  border-bottom: 2px solid #adadad;
+  position: relative;
+  margin: 30px 0;
+}
+.txtb.register{
+    transition: 1.2s;
+    opacity: 0%;
+    display: none;
+}
+.space{
+    transition: 1.5s;
+    height: 0px;
+}
+.txtlogin,.txtregister{
+    color: skyblue;
+}
+.txtlogin:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.txtregister:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.txtb input{
+  font-size: 15px;
+  color: white;
+  border: none;
+  width: 100%;
+  outline: none;
+  background: none;
+  padding: 0 5px;
+  height: 40px;
+}
+
+.txtb span::before{
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 55%;
+  left: 5px;
+  color: #adadad;
+  transform: translateY(-50%);
+  z-index: -1;
+  transition: .5s;
+}
+
+.txtb span::after{
+  content: '';
+  position: absolute;
+  top: 99%;
+  left: 0%;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(120deg,#3498db,#8e44ad);
+  transition: .5s;
+}
+
+.focus + span::before{
+  top: -5px;
+}
+.focus + span::after{
+  width: 100%;
+}
+
+.logbtn{
+  display: block;
+  width: 100%;
+  height: 30px;
+  border: none;
+  background: linear-gradient(120deg,#3498db,#8e44ad,#3498db);
+  background-size: 200%;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: .5s;
+}
+
+.logbtn:hover{
+  background-position: right;
+}
+
+.bottom-text{
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color:white;  
+}
+/*封面文字*/
+.col-sm-8.title h2{
+    position: relative;
+    left: 15%;
+    margin-top: 150px;
+    font-size: 100px;
+    font-family: cursive;
+    margin-left: 80px;
+}
+.col-sm-8.title h3{
+    position: relative;
+    left: 15%;
+    margin-top: 50px;
+    margin-left: 120px;
+    font-size: 60px;
+    font-family: "Comic Sans MS";
+    overflow: visible;
+    letter-spacing: 5px;
+}
+.col-sm-8.title i{
+    position: relative;
+    left:2%;
+}

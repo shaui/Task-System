@@ -1,0 +1,53 @@
+
+body{
+    margin: 0px;
+    padding: 0px;
+    background: url("../img/%E4%B8%AD%E5%A4%AE%E8%83%8C%E6%99%AF.jpg");
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 1;
+}
+.container{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+}
+form {
+  /* set width in form, not fieldset (still takes up more room w/ fieldset width */
+  font:100% verdana,arial,sans-serif;
+  margin: auto;
+  padding: 0;
+  min-width: 0px;
+  max-width: 600px;
+  width: 380px;
+  position:absolute; height:200px;
+  top:0; bottom:0; left:0; right:0;
+
+  background-color: rgb(211,211,211,0.3);
+  border: 2px solid  rgba(39,123,67);
+  border-radius: 5px;
+  font-weight:bold;
+}
+
+.store {
+    border: 2px solid  rgba(39,123,67);
+    border-radius: 10px;
+}
+
+.background {
+  background-color: rgb(211,211,211);
+  border-radius: 5px;
+  font-weight:bold;
+}
+.orange {
+	color:orange;
+}
+.brown {
+  color:brown;
+}
+.white {
+	color:white;
+}

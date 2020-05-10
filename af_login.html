@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<title>CommissionList</title>
+
+		<!-- Google CSS Font -->
+		<link href="https://fonts.googleapis.com/css?family=Kumar+One+Outline&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Yellowtail&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+	    <!-- Bootstrap core CSS -->
+    	<link href="statics/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- for carousel --> 
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	    <!-- -->
+
+
+	    <!-- for carousel -->
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+	    <link rel="stylesheet" type="text/css" href="statics/css/af_login.css">
+        <script src="https://kit.fontawesome.com/3fadc3202f.js" crossorigin="anonymous"></script>
+	</head>
+	<body>
+        <div class="container detail">
+            <div class="row" id="detail_commission">
+                <div class="col-sm-6">    
+                    <div class="info">
+                        <div class="head_img">
+                            <div class="cross">
+                                <i class="fas fa-times"></i>
+                            </div>
+				            <img class="det_img" src="">
+                            <div class="detail">
+                                <p class="det_delegator">
+                                
+                                </p>
+                                <p class="rank">
+
+                                </p>
+                                <p class="exp">
+
+                                </p>
+                            </div>
+                        </div>
+                        <div class="detail_des">
+
+                        </div>
+                        <div class="sub_button">
+							<input id="apply_commission" type="button" style="text-align: center;" class="btn-submit " value="申請委託">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="white">
+            
+        </div>
+        
+        <div class="container">
+            <ul>
+                <li><a href="index.html" style="color:white;">登出</a></li>
+                <li><a href="delegator_back.html" style="color:white;">委託後台</a></li>
+                <li><a href="trustee_back.html" style="color:white;">受託後台</a></li>
+                <li><a href="history.html" style="color:white;">歷史紀錄</a></li>
+                <li class="active"><a href="#" style="color:white;">委託清單</a></li>
+            </ul>
+        </div>
+        <div class="container stores">
+			<div id="commission_panel" class="row">
+				
+            </div>
+        </div>
+        <script>
+        	//取得目前登入ID	
+        	var id = localStorage.getItem("id");
+        
+	        function getAllCommission(argument) {
+				$.ajax({
+					type: "GET",
+					url: "api/commission.do",
+					crossDomain: true,
+					cache: false,
+					dataType: 'json',
+					timeout: 5000,
+					success: function (response) {
+			        	console.log(response.status);
+			        	$("#commission_panel").empty();
+			            if(response.status == 200){
+			            	var commission_panel = "";
+			            	
+			            	$.each(response.response.data, function(index, val) {
+			            		 commission_panel += add_commission(val);
+			            	});
+			            }
+			            $("#commission_panel").append(commission_panel);
+			            
+			            console.log(response);
+			        },
+			        error: function () {
+			            alert("無法連線到伺服器！");
+			        }
+				});
+			}
+	        
+	        function add_commission(data) {
+				let inner_html = '';
+				inner_html += '<div class="col-sm-2 col-div-style">';
+				inner_html += '<div class="contents store" id="' + data.idtbCommission_list + '">';
+				inner_html += '<div class="head_img">' + '<img class="nor_img" src="statics/img/' + data.img + '">' + '</div>';
+				inner_html += '<div class="delegator">' + data.name + '</div>';
+				inner_html += '<div class="rank">';
+				inner_html += addStar(data.star_level);
+				inner_html += '</div>';
+				inner_html += '<div class="brief_des">' + data.brief_description + '</div>';
+				inner_html += '</div>';
+				inner_html += '</div>';
+				return inner_html;
+			}
+	        
+	        function addStar(star_level){
+	        	inner_html = "";
+	        	//總共要填五次
+	        	for(i=0; i<5; i++){
+	        		//判斷要填滿幾次星星
+	        		if(i < star_level){
+	        			inner_html += '<i class="fas fa-star"></i>';
+	        		}else {
+	        			inner_html += '<i class="far fa-star"></i>'
+	        		}
+	        	}
+	        	return inner_html;
+	        }
+	        
+	        function getCommission(id){
+	        	$.ajax({
+                    type: "GET",
+                    url: "api/commission.do",
+                    crossDomain: true,
+                    data: "id_commission=" + id,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                    	var data = response.response.data[0];
+                    	console.log(data)
+                    	if(response.status == 200){
+                    		setDetailCommission(data);
+                        }
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+	        }
+	        function setDetailCommission(data){
+				$(".det_img").attr("src", "statics/img/" + data.img);
+				$(".detail .det_delegator").text("委託人:" + data.name);
+				$(".detail .rank").html( addStar(data.star_level) );
+				$(".detail .exp").text("經驗值:" + data.exp);
+				$(".detail_des").text(data.detail_description);
+	        }
+	        
+	        function applyCommission(data){
+	        	var data_object = {
+			            "id_applicant": id,
+			            "id_delegator": data.id_delegator,
+			            "brief_description": data.brief_description,
+			            "detail_description": data.detail_description,
+			            "star_level": data.star_level,
+			            "exp": data.exp,
+			            "tbDelegator_back_idtbDelegator_back": data.tbDelegator_back_idtbDelegator_back,
+			            "img": data.img,
+			            "name": data.name
+		        };
+
+		        var data_string = JSON.stringify(data_object);
+		        console.log(data_string);
+				
+		        $.ajax({
+					type: "POST",
+                    url: "api/commission.do",
+	                data: data_string,
+	                crossDomain: true,
+	                cache: false,
+	                dataType: 'json',
+	                timeout: 5000,
+	                success: function (response) {
+	                	console.log(response)
+	                	if(response.status == 200){
+	                		alert("申請委託成功!");
+	                	}else{
+	                		alert("此委託已經申請過了!");
+	                	}
+	                	
+	                	//重新整理頁面
+	                	window.location.reload();
+	                },
+	                error: function () {
+	                    alert("無法連線到伺服器");
+	                }
+				
+				});
+				
+	        }
+	
+			$(document).ready(function() {
+				getAllCommission();
+				//存取被點擊的委託
+				var id_commission;
+				
+				//點擊委託，可以查看詳細資料
+				$(".stores").on('click', '.contents', function(event) {
+					// console.log(event.target)
+					//parents(".contents")會向上找到class = contents的DOM元素
+					id_commission = $(event.target).parents(".contents").attr("id");
+					console.log(id_commission);
+					//window.location.href = "commission.html" + "?id=" + id;
+					getCommission(id_commission);
+					$(".container.detail").css("opacity","100%");
+				    $(".container.detail").css("top","50%");
+				    $(".container.detail").css("transform","translateY(-50%)");
+				    $(".white").css("background","rgb(255,255,255,0.8)");
+				    $(".white").css("pointer-events","auto");
+				});
+				
+				//點XX可以關閉
+				$(".fas.fa-times").on("click",function(){
+				    $(".container.detail").css("opacity","0%");
+				    $(".container.detail").css("top","-100%");
+				    $(".white").css("background","none");
+				    $(".white").css("pointer-events","none");
+				});
+				
+				//申請委託
+				$("#apply_commission").click(function(event) {
+					console.log(id_commission);
+					$.ajax({
+	                    type: "GET",
+	                    url: "api/commission.do",
+	                    crossDomain: true,
+	                    data: "id_commission=" + id_commission,
+	                    cache: false,
+	                    dataType: 'json',
+	                    timeout: 5000,
+	                    success: function (response) {
+	                    	var data = response.response.data[0];
+	                    	console.log(data)
+	                    	
+	                    	if(response.status == 200){
+	                    		if(id == data.id_delegator){
+	                    			alert("不能申請自己的委託!");
+	                    		}else {
+	                    			console.log("申請成功!")
+	                    			applyCommission(data);
+	                    		}
+	                    		
+	                        }
+	                    },
+	                    error: function () {
+	                        alert("無法連線到伺服器！");
+	                    }
+	                });
+				});
+				
+			});
+        </script>
+		<script src="statics/jquery/jquery.min.js"></script>
+		<script src="statics/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="statics/js/af_login.js"></script>
+	</body>
+</html>

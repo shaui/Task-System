@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Evaluation</title>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
+      <link rel="stylesheet" type="text/css" href="statics/css/evaluation.css">
+  </head>
+
+  <body>
+
+      <div id="container">
+          <div id="content">
+              <div id="flashMessage" class="message" style="display: none;"></div>
+
+              <form id="form" accept-charset="utf-8">
+              	<font size="+2">
+                  
+                  <label class="orange" for="star_level">您對於這次評價:</label><br>
+                  <textarea placeholder="請輸入你想要評價的內容" class="store" id="evaluation" cols="50" rows="8"></textarea>
+                  <div class="submit" style="text-align: center;"><input type="button" value="送出" id="submit"></div>
+                  
+              	</font>
+              </form>
+
+              <script type="text/javascript">
+                    // 處理表單點擊事件
+                    var $form = $(".submit");
+                    $form.click(function () {
+                      submit();
+                    });
+
+                    function submit() {
+
+                      var url_string = window.location.href;
+         			  var url = new URL(url_string);
+        			  var record_id = url.searchParams.get("record_id");
+        			  var member_id = localStorage.getItem("member_id");                 
+                      var evaluation = $('#evaluation').val();
+        		   	                       
+                      console.log(record_id);
+        		   	  
+                      // 將資料組成JSON格式
+                      var data_object = {
+                    		"record_id": record_id,
+                    		"evaluation": evaluation,
+                      };
+
+                      // 將JSON格式轉換成字串
+                      var data_string = JSON.stringify(data_object);
+
+                      // 發出POST的AJAX請求
+                      if(member_id == 0)
+                      {
+	                      $.ajax({
+	                        type: "POST",
+	                        url: "api/evaluation_delegator.do",
+	                        data: data_string,
+	                        crossDomain: true,
+	                        cache: false,
+	                        dataType: 'json',
+	                        timeout: 5000,
+	                        success: function (response) {
+	                          $('#flashMessage').html(response.message);
+	                          $('#flashMessage').show();
+	                          if (response.status == 200) 
+	                          {
+	                        	  alert("委託評價成功!")
+	                          }
+	                          location.href='history.html'
+	                        },
+	                        error: function () {
+	                          alert("無法連線到伺服器！");
+	                        }
+	                      });
+                      }
+                      else if(member_id == 1)
+                      {
+                    	  console.log(record_id);
+	                      $.ajax({
+	                          type: "POST",
+	                          url: "api/evaluation_trustee.do",
+	                          data: data_string,
+	                          crossDomain: true,
+	                          cache: false,
+	                          dataType: 'json',
+	                          timeout: 5000,
+	                          success: function (response) {
+	                            $('#flashMessage').html(response.message);
+	                            $('#flashMessage').show();
+	                            if (response.status == 200) 
+	                            {
+	                            	alert("受託評價成功!")
+	                            }
+	                            location.href='history.html'
+	                          },
+	                          error: function () {
+	                            alert("無法連線到伺服器！");
+	                          }
+	                        });
+                      }
+                    }
+              </script>
+          </div>
+      </div>
+  </body>
+
+</html>
+

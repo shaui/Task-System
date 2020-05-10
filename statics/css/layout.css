@@ -1,0 +1,97 @@
+.banner {
+	background-color: black;
+	opacity: 0.9;
+	position: fixed;
+	width: 100vw;
+	height: 18vh;
+	z-index: 10;
+}
+
+.col-div-style {
+	padding: 10px;
+}
+
+.contents {
+	border: 1px lightblue solid;
+	border-radius: 5px; 
+	background-color: white;
+}
+
+.footer-style {
+	background-color: black;
+	opacity: 0.8;
+	width: 100vw;
+	padding: 3vh;
+}
+
+.right-bottom{
+  position: absolute;
+  right: 5rem;
+  bottom: 2rem;
+}
+
+.store {
+	cursor: pointer;
+
+}
+
+.store:hover {
+	border: 1px red solid;
+	box-shadow: 4px 4px 5px -2px red;
+}
+
+.store_img {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	height: 30vh;
+}
+img {
+	width:auto;
+	height:auto;
+	max-width:100%;
+	max-height:100%;
+}
+.description {
+	margin: 0;
+	padding: 0.5vw;
+	height: 13vh;
+}
+
+.price {
+	margin: 0;
+	padding: 0.5vw;
+	height: 7vh;
+}
+
+body {
+	background-color: rgb(219,242,243);
+}
+
+.delegator{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+}
+
+.brief_des {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 5px;
+	height: 15vh;
+}
+
+.head_img {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	height: 25vh;
+}
